@@ -1,7 +1,5 @@
 
 
-
-
 import { searchImagesByQuery } from './js/pixabay-api.js';
 
 // Описаний у документації
