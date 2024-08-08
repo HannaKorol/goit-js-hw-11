@@ -1,21 +1,22 @@
 
-
-import { searchImagesByQuery } from './js/pixabay-api.js';
-
+import {fetchImages} from './js/pixabay-api.js';
+import {
+  renderImages,
+  clearGallery,
+  showLoader,
+  hideLoader, 
+} from './js/render-functions.js';
 // Описаний у документації
 import iziToast from "izitoast";
 // Додатковий імпорт стилів
 import "izitoast/dist/css/iziToast.min.css";
 
 
-
 // 2) Користувач буде вводити рядок для пошуку в текстове поле, а за сабмітом форми необхідно виконувати HTTP-запит із цим пошуковим рядком.
 
 const form = document.querySelector(".form-search");
 
-form.addEventListener("submit", handleSubmitBtn);
-
-function handleSubmitBtn(event) {
+form.addEventListener("submit", event => {
     event.preventDefault();
     //Обробка тексту що було введено користувачем в форму :
 
@@ -27,7 +28,7 @@ function handleSubmitBtn(event) {
     // 2. Отримуємо запит користувача і очищуємо його від зайвих пробілів (const query):
     //    2.1 queryInput.value - отримання значення (текст), введене користувачем в input
     //    2.2. trim() - видаляємо пробіли з початку і кінця веденного значення
-    const query = queryInput.value.trim();
+    const query = queryInput.value.trim().toLowerCase();
 
 
     // 3) При натисканні на кнопку відправки форми, додайте перевірку вмісту текстового поля на наявність порожнього рядка, щоб користувач не міг відправити запит, якщо поле пошуку порожнє.
@@ -38,4 +39,28 @@ function handleSubmitBtn(event) {
         });
         return;
     }
-}
+
+
+clearGallery();
+showLoader();
+
+fetchImages(query)
+.then(data => {
+    if(data.hits.length === 0) {
+        iziToast.error({
+message: 
+"Sorry, there are no images matching your search query. Please try again!",
+position: 'topRight',
+        });
+    } else {
+        renderImages(data.hits);
+    }
+})
+.catch(error => {
+  iziToast.error({ title: 'Error', message: error.message });
+})
+.finally(() => {
+  hideLoader();
+  queryInput.value = '';
+});
+});//Якщо масив hits порожній, відображається повідомлення про те, що зображень не знайдено. Якщо ж зображення знайдено, вони рендеряться за допомогою функції renderImages.
