@@ -4,9 +4,7 @@ import SimpleLightbox from "simplelightbox";
 // Додатковий імпорт стилів
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-
 const galleryList = document.querySelector(".gallery-list");
-
 
 //Відмальовка знайденої картинки
 export function renderImages(images) {
@@ -25,10 +23,10 @@ export function renderImages(images) {
         <img src="${webformatURL}" alt="${tags}"/>
         </a>
         <div class="text-wrapper">
-    <p><b>Likes:</b> ${likes}</p>
-    <p><b>Views:</b> ${views}</p>
-    <p><b>Comments:</b> ${comments}</p>
-    <p><b>Downloads:</b> ${downloads}</p>
+    <div class="stat"><p><b>Likes:</b> ${likes}</p></div>
+    <div class="stat"><p><b>Views:</b> ${views}</p> </div>
+    <div class="stat"><p><b>Comments:</b> ${comments}</p></div>
+    <div class="stat"><p><b>Downloads:</b> ${downloads}</p></div>
         </div>
     </li>
     `
@@ -37,7 +35,7 @@ export function renderImages(images) {
 
 galleryList.insertAdjacentHTML("beforeend", markup);
 
-new SimpleLightbox ('.gallery a', {
+new SimpleLightbox ('.gallery-list a', {
     captionsData:"alt",
     captionsDelay: 250
 }).refresh();
